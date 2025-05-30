@@ -54,7 +54,12 @@
       cursor: pointer;
       font-size: 14px;
       text-decoration: underline;
-      margin-top: 5px;
+    }
+
+    .toggle-right {
+      text-align: right;
+      margin: -5px auto 5px auto;
+      width: 90%;
     }
 
     #user-info {
@@ -81,7 +86,6 @@
 <body>
 
   <div class="container">
-
     <h2>Firebase Authentication</h2>
 
     <!-- Sign Up Form -->
@@ -100,6 +104,7 @@
       <h3>Sign In</h3>
       <input type="email" id="signin-email" placeholder="Email">
       <input type="password" id="signin-password" placeholder="Password">
+      <div class="toggle toggle-right" onclick="resetPassword()">Forgot your password?</div>
       <button onclick="signIn()">Sign In</button>
       <button class="google-btn" onclick="signInWithGoogle()">Continue with Google</button>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign Up</div>
@@ -112,10 +117,9 @@
       <p><strong>Email:</strong> <span id="display-email"></span></p>
       <button id="signout-btn" onclick="signOut()">Sign Out</button>
     </div>
-
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
 
@@ -147,9 +151,7 @@
 
       auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
-          return result.user.updateProfile({
-            displayName: fullName
-          }).then(() => {
+          return result.user.updateProfile({ displayName: fullName }).then(() => {
             alert("Signed up successfully!");
             showUser(result.user);
           });
@@ -182,6 +184,23 @@
           showUser(result.user);
         })
         .catch(error => alert(error.message));
+    }
+
+    function resetPassword() {
+      const email = document.getElementById("signin-email").value;
+
+      if (!email) {
+        alert("Please enter your email to reset password.");
+        return;
+      }
+
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          alert("Password reset email sent! Check your inbox.");
+        })
+        .catch(error => {
+          alert(error.message);
+        });
     }
 
     function signOut() {

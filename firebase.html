@@ -47,6 +47,7 @@
 
     .google-btn {
       background-color: #db4437;
+      margin-top: 10px;
     }
 
     .toggle {
@@ -86,7 +87,7 @@
 <body>
 
   <div class="container">
-    <h2>Firebase Authentication</h2>
+    <h2>AuthFlow by Fardan</h2>
 
     <!-- Sign Up Form -->
     <div id="signup-form" style="display: none;">
@@ -96,6 +97,7 @@
       <input type="email" id="signup-email" placeholder="Email">
       <input type="password" id="signup-password" placeholder="Password">
       <button onclick="signUp()">Sign Up</button>
+      <button class="google-btn" onclick="signInWithGoogle()">Continue with Google</button>
       <div class="toggle" onclick="showSignIn()">Already have an account? Sign In</div>
     </div>
 
@@ -112,7 +114,7 @@
 
     <!-- User Info -->
     <div id="user-info" style="display:none;">
-      <h3>Welcome to Fardan Project</h3>
+      <h3>Welcome to AuthFlow</h3>
       <p><strong>Name:</strong> <span id="display-name"></span></p>
       <p><strong>Email:</strong> <span id="display-email"></span></p>
       <button id="signout-btn" onclick="signOut()">Sign Out</button>

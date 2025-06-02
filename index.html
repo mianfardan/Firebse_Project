@@ -92,8 +92,6 @@
     <!-- Sign Up Form -->
     <div id="signup-form" style="display: none;">
       <h3>Sign Up</h3>
-      <input type="text" id="first-name" placeholder="First Name">
-      <input type="text" id="last-name" placeholder="Last Name">
       <input type="email" id="signup-email" placeholder="Email">
       <input type="password" id="signup-password" placeholder="Password">
       <button onclick="signUp()">Sign Up</button>
@@ -126,6 +124,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
 
   <script>
+    // Your Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBiHe0gbu_U7MLXPATvRsT88R-zV0_Wm7c",
       authDomain: "fardan-c91ef.firebaseapp.com",
@@ -136,31 +135,29 @@
       measurementId: "G-6YT5TKP1E2"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    // Sign Up Function
     function signUp() {
-      const firstName = document.getElementById("first-name").value;
-      const lastName = document.getElementById("last-name").value;
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
-      const fullName = `${firstName} ${lastName}`;
 
-      if (!firstName || !lastName || !email || !password) {
-        alert("Please fill in all fields.");
+      if (!email || !password) {
+        alert("Please enter email and password.");
         return;
       }
 
       auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
-          return result.user.updateProfile({ displayName: fullName }).then(() => {
-            alert("Signed up successfully!");
-            showUser(result.user);
-          });
+          alert("Signed up successfully!");
+          showUser(result.user);
         })
         .catch(error => alert(error.message));
     }
 
+    // Sign In Function
     function signIn() {
       const email = document.getElementById("signin-email").value;
       const password = document.getElementById("signin-password").value;
@@ -178,6 +175,7 @@
         .catch(error => alert(error.message));
     }
 
+    // Sign In with Google
     function signInWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
@@ -188,6 +186,7 @@
         .catch(error => alert(error.message));
     }
 
+    // Password Reset
     function resetPassword() {
       const email = document.getElementById("signin-email").value;
 
@@ -205,6 +204,7 @@
         });
     }
 
+    // Sign Out
     function signOut() {
       auth.signOut().then(() => {
         alert("Signed out!");
@@ -214,6 +214,7 @@
       });
     }
 
+    // Show User Info
     function showUser(user) {
       document.getElementById("signup-form").style.display = "none";
       document.getElementById("signin-form").style.display = "none";
@@ -222,18 +223,21 @@
       document.getElementById("display-email").innerText = user.email;
     }
 
+    // Show Sign In Form
     function showSignIn() {
       document.getElementById("signup-form").style.display = "none";
       document.getElementById("signin-form").style.display = "block";
       document.getElementById("user-info").style.display = "none";
     }
 
+    // Show Sign Up Form
     function showSignUp() {
       document.getElementById("signin-form").style.display = "none";
       document.getElementById("signup-form").style.display = "block";
       document.getElementById("user-info").style.display = "none";
     }
 
+    // Handle auth state changes
     auth.onAuthStateChanged(user => {
       if (user) {
         showUser(user);

@@ -127,7 +127,7 @@
       apiKey: "AIzaSyBiHe0gbu_U7MLXPATvRsT88R-zV0_Wm7c",
       authDomain: "fardan-c91ef.firebaseapp.com",
       projectId: "fardan-c91ef",
-      storageBucket: "fardan-c91ef.firebasestorage.app",
+      storageBucket: "fardan-c91ef.appspot.com",
       messagingSenderId: "866660712427",
       appId: "1:866660712427:web:03eb33304927c24524a3ae",
       measurementId: "G-6YT5TKP1E2"
@@ -147,8 +147,11 @@
 
       auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
-          alert("Signed up successfully!");
-          showUser(result.user);
+          result.user.sendEmailVerification().then(() => {
+            alert("Verification email sent. Please check your inbox and verify before signing in.");
+            auth.signOut();
+            showSignIn();
+          });
         })
         .catch(error => alert(error.message));
     }
@@ -164,8 +167,14 @@
 
       auth.signInWithEmailAndPassword(email, password)
         .then(result => {
-          alert("Signed in successfully!");
-          showUser(result.user);
+          if (result.user.emailVerified) {
+            alert("Signed in successfully!");
+            showUser(result.user);
+          } else {
+            alert("Email not verified. Verification email resent.");
+            result.user.sendEmailVerification();
+            auth.signOut();
+          }
         })
         .catch(error => alert(error.message));
     }
@@ -227,7 +236,13 @@
 
     auth.onAuthStateChanged(user => {
       if (user) {
-        showUser(user);
+        if (user.emailVerified) {
+          showUser(user);
+        } else {
+          alert("Please verify your email before continuing.");
+          user.sendEmailVerification();
+          auth.signOut();
+        }
       }
     });
   </script>
